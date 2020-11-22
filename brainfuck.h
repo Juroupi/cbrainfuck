@@ -3,17 +3,23 @@
 
 typedef struct {
 
-	unsigned int array_size;
-
 	unsigned char* array;
 
-	unsigned char* ptr;
+	unsigned char* array_end;
+
+	unsigned char* array_ptr;
+
+	char** jmp_stack;
+
+	char** jmp_stack_end;
+
+	char** jmp_stack_top;
 
 } brainfuck_st;
 
 int bf_init(brainfuck_st* bf, unsigned int array_size);
 
-int bf_exec(brainfuck_st* bf, char* code);
+int bf_exec(brainfuck_st* bf, const char* code);
 
 void bf_clear(brainfuck_st* bf);
 
