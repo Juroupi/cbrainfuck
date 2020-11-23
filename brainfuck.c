@@ -66,6 +66,7 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 		}
 
 		else if (c == '>') {
+
 			if (++bf->array_ptr == bf->array_end) {
 				--bf->array_ptr, ret = 0;
 				break;
@@ -73,6 +74,7 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 		}
 
 		else if (c == '<') {
+
 			if (--bf->array_ptr < bf->array) {
 				++bf->array_ptr, ret = 0;
 				break;
@@ -101,13 +103,26 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 			
 			else {
 
-				while ((c = *(++code)) != ']') {
+				unsigned int tmp_stack_count = 1;
+
+				do {
+
+					c = *(++code);
+
+					if (c == '[') {
+						++tmp_stack_count;
+					}
+
+					else if (c == ']') {
+						--tmp_stack_count;
+					}
 					
-					if (c == '\0') {
+					else if (c == '\0') {
 						--code, ret = 0;
 						break;
 					}
-				}
+
+				} while (tmp_stack_count != 0);
 			}
 		}
 
