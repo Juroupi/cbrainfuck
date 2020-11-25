@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 int bf_init(brainfuck_st* bf, unsigned int array_size) {
 	
 	static const size_t jmp_stack_size = 16;
@@ -51,7 +52,7 @@ static int increase_stack_size(brainfuck_st* bf) {
 
 int bf_exec(brainfuck_st* bf, const char* code) {
 
-	int ret = 1;
+	int ret = BF_OK;
 
 	char c;
 	
@@ -68,7 +69,7 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 		else if (c == '>') {
 
 			if (++bf->array_ptr == bf->array_end) {
-				--bf->array_ptr, ret = 0;
+				--bf->array_ptr, ret = BF_POINTER;
 				break;
 			}
 		}
@@ -76,7 +77,7 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 		else if (c == '<') {
 
 			if (--bf->array_ptr < bf->array) {
-				++bf->array_ptr, ret = 0;
+				++bf->array_ptr, ret = BF_POINTER;
 				break;
 			}
 		}
@@ -94,7 +95,7 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 			if (*bf->array_ptr) {
 
 				if (bf->jmp_stack_top == bf->jmp_stack_end && !increase_stack_size(bf)) {
-					ret = 0;
+					ret = BF_ALLOC;
 					break;
 				}
 
@@ -118,7 +119,7 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 					}
 					
 					else if (c == '\0') {
-						--code, ret = 0;
+						--code, ret = BF_BRACKET;
 						break;
 					}
 
@@ -129,7 +130,7 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 		else if (c == ']') {
 
 			if (bf->jmp_stack_top == bf->jmp_stack) {
-				ret = 0;
+				ret = BF_BRACKET;
 				break;
 			}
 
@@ -143,9 +144,11 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 		++code;
 	}
 
-	if (bf->jmp_stack_top > bf->jmp_stack) {
-		bf->jmp_stack_top = bf->jmp_stack, ret = 0;
+	if (bf->jmp_stack_top > bf->jmp_stack && ret == BF_OK) {
+		ret = BF_BRACKET;
 	}
+
+	bf->jmp_stack_top = bf->jmp_stack;
 
 	return ret;
 }
