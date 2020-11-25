@@ -36,7 +36,7 @@ enum brainfuck_status_e {
 	BF_BRACKET,
 
 	/** The pointer goes out of the array
-	 * The pointer is reset to 0
+	 * The pointer is reset to the beginning of the array
 	 */
 	BF_POINTER,
 

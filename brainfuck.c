@@ -84,7 +84,7 @@ int bf_exec_io(brainfuck_st* bf, const char* code, char (*input)(), void (*outpu
 		else if (c == '>') {
 
 			if (++bf->array_ptr == bf->array_end) {
-				--bf->array_ptr, ret = BF_POINTER;
+				bf->array_ptr = bf->array, ret = BF_POINTER;
 				break;
 			}
 		}
@@ -92,7 +92,7 @@ int bf_exec_io(brainfuck_st* bf, const char* code, char (*input)(), void (*outpu
 		else if (c == '<') {
 
 			if (--bf->array_ptr < bf->array) {
-				++bf->array_ptr, ret = BF_POINTER;
+				bf->array_ptr = bf->array, ret = BF_POINTER;
 				break;
 			}
 		}
