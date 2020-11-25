@@ -1,5 +1,5 @@
 # cbrainfuck
-Brainfuck interpreter in C
+Interpret Brainfuck in C
 
 ```c
 #include "brainfuck.h"
