@@ -59,6 +59,12 @@ int bf_init(brainfuck_st* bf, unsigned int array_size);
  */
 int bf_exec(brainfuck_st* bf, const char* code);
 
+/** Same as bf_exec() but uses user-defined input/output functions
+ * @param input a function to read a character
+ * @param output a function to send a character
+ */
+int bf_exec_io(brainfuck_st* bf, const char* code, char (*input)(), void (*output)(char c));
+
 /** Free the memory of a brainfuck struct
  * @param bf the struct
  */

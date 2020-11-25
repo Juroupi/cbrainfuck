@@ -4,6 +4,35 @@
 #include <stdlib.h>
 
 
+static int increase_stack_size(brainfuck_st* bf) {
+
+	size_t new_jmp_stack_size = (bf->jmp_stack_end - bf->jmp_stack) * 2;
+
+	char** new_jmp_stack = realloc(bf->jmp_stack, sizeof(char*) * new_jmp_stack_size);
+	if (new_jmp_stack == NULL) {
+		return 0;
+	}
+
+	size_t stack_top_offset = bf->jmp_stack_top - bf->jmp_stack;
+
+	bf->jmp_stack = new_jmp_stack;
+	bf->jmp_stack_end = bf->jmp_stack + new_jmp_stack_size;
+	bf->jmp_stack_top = bf->jmp_stack + stack_top_offset;
+
+	return 1;
+}
+
+
+static char default_input() {
+	return (char)getchar();
+}
+
+
+static void default_output(char c) {
+	putchar((int)c);
+}
+
+
 int bf_init(brainfuck_st* bf, unsigned int array_size) {
 	
 	static const size_t jmp_stack_size = 16;
@@ -31,26 +60,12 @@ int bf_init(brainfuck_st* bf, unsigned int array_size) {
 }
 
 
-static int increase_stack_size(brainfuck_st* bf) {
-
-	size_t new_jmp_stack_size = (bf->jmp_stack_end - bf->jmp_stack) * 2;
-
-	char** new_jmp_stack = realloc(bf->jmp_stack, sizeof(char*) * new_jmp_stack_size);
-	if (new_jmp_stack == NULL) {
-		return 0;
-	}
-
-	size_t stack_top_offset = bf->jmp_stack_top - bf->jmp_stack;
-
-	bf->jmp_stack = new_jmp_stack;
-	bf->jmp_stack_end = bf->jmp_stack + new_jmp_stack_size;
-	bf->jmp_stack_top = bf->jmp_stack + stack_top_offset;
-
-	return 1;
+int bf_exec(brainfuck_st* bf, const char* code) {
+	return bf_exec_io(bf, code, default_input, default_output);
 }
 
 
-int bf_exec(brainfuck_st* bf, const char* code) {
+int bf_exec_io(brainfuck_st* bf, const char* code, char (*input)(), void (*output)(char c)) {
 
 	int ret = BF_OK;
 
@@ -83,11 +98,11 @@ int bf_exec(brainfuck_st* bf, const char* code) {
 		}
 
 		else if (c == '.') {
-			putchar(*bf->array_ptr);
+			output(*bf->array_ptr);
 		}
 
 		else if (c == ',') {
-			*bf->array_ptr = getchar();
+			*bf->array_ptr = input();
 		}
 
 		else if (c == '[') {
