@@ -3,13 +3,13 @@
 
 static int inc_ptr(const bf_convert_st* bf, int* inc) {
 	
-	if (inc != 0) {
+	if (*inc != 0) {
 
-		if (!bf->inc_ptr(inc)) {
+		if (!bf->inc_ptr(*inc)) {
 			return 0;
 		}
 
-		inc = 0;
+		*inc = 0;
 	}
 
 	return 1;
@@ -18,13 +18,13 @@ static int inc_ptr(const bf_convert_st* bf, int* inc) {
 
 static int inc_val(const bf_convert_st* bf, int* inc) {
 	
-	if (inc != 0) {
+	if (*inc != 0) {
 		
-		if (!bf->inc_val(inc)) {
+		if (!bf->inc_val(*inc)) {
 			return 0;
 		}
 
-		inc = 0;
+		*inc = 0;
 	}
 
 	return 1;
