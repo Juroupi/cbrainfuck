@@ -3,13 +3,13 @@
 
 typedef struct {
 
-	int (*inc_ptr)(int x);
+	int (*inc_ptr)(int inc);
 
-	int (*inc_val)(int x);
+	int (*inc_val)(int inc);
 
-	int (*put_char)(char c);
+	int (*put_char)();
 
-	char (*get_char)();
+	int (*get_char)();
 
 	int (*loop_start)();
 
